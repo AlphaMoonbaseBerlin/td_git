@@ -1,0 +1,43 @@
+'''Info Header Start
+Name : TDGit
+Author : Admin
+Version : 0
+Build : 3
+Savetimestamp : 1646941202
+Saveorigin : td_git_development.toe
+Saveversion : 2021.16410
+Info Header End'''
+
+from TDStoreTools import StorageManager
+import TDFunctions as TDF
+import os
+class TDGit:
+
+	def __init__(self, ownerComp):
+		# The component to which this extension is attached
+		self.ownerComp = ownerComp
+		try:
+			self.git = self.ownerComp.op("olib_dependancy").Get_Component().Import_Module( "git", pip_name = "GitPython")
+		except ImportError as e:
+			self.init_error_ui()
+			return
+		self.repo = self.git.Repo( ".git" )
+		debug( self.repo.is_dirty() )
+		debug( self.repo.untracked_files )
+
+
+	def init_error_ui(self):
+		result = ui.messageBox(
+				"Could not init td-git",
+				"An error occured during the init of TD-Git. This might be because you do not have git already installed.",
+				buttons = ["Search for git Executable", "Install git via Winget and retry", "Abort"] )
+		if result == 0: 
+			filepath = ui.chooseFile(start = "C:/Program Files/Git/bin", fileTypes = [".exe"] )
+			if filepath: 
+				os.environ['GIT_PYTHON_GIT_EXECUTABLE'] = filepath
+				os.system(f"SETX GIT_PYTHON_GIT_EXECUTABLE {filepath} /M")
+		if result == 1:
+			os.system(f"winget install --id Git.Git")
+		if result == 2:
+			raise Exception( "Aborting git-init")
+		self.__init__(self.ownerComp)
