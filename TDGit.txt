@@ -2,8 +2,8 @@
 Name : TDGit
 Author : Admin
 Version : 0
-Build : 3
-Savetimestamp : 1646941202
+Build : 5
+Savetimestamp : 1646941354
 Saveorigin : td_git_development.toe
 Saveversion : 2021.16410
 Info Header End'''
@@ -24,6 +24,7 @@ class TDGit:
 		self.repo = self.git.Repo( ".git" )
 		debug( self.repo.is_dirty() )
 		debug( self.repo.untracked_files )
+		debug("Changing something")
 
 
 	def init_error_ui(self):
